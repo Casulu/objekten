@@ -21,11 +21,14 @@ public class RobotTest {
             System.exit(-1);
         }
         robot = new RandomRobot(maze);
-
+		
+		int count = 0;
         while(!robot.hasReachedGoal()){
             System.out.print(robot.toString());
             robot.move();
+			count++;
         }
         System.out.print(robot.toString());
+		System.out.println("Robot finished in " + count + "steps");
     }
 }
