@@ -26,7 +26,7 @@ public class Maze {
         mazeData = new ArrayList<String>();
         //Variabel declaration
         Scanner test = new Scanner(reader);
-        String currline;
+        String currLine;
 
         boolean startFound = false;
         boolean endFound = false;
@@ -38,28 +38,30 @@ public class Maze {
                 throw test.ioException();
             }
             //Read next line in file
-            currline = test.nextLine();
+            currLine = test.nextLine();
             //Add line to list
-            mazeData.add(currline);
+            mazeData.add(currLine);
             //If current line is longer than current highest length, set numColumns to current length
-            if(numColumns < currline.length()){
-                numColumns = currline.length();
+            if(numColumns < currLine.length()){
+                numColumns = currLine.length();
             }
-            int s = currline.indexOf('S');
-            int g = currline.indexOf('G');
 
-            //If an S was found, set starting position to found coordinates and mark that a start was found
-            if(s != -1){
-                startPos = new Position(s, mazeData.size()-1); // mazeData.size() - 1 is current row
-                if(!startFound){
-                    startFound = true;
-                }else{
-                    throw new MazeBuildException("File contained multiple starts");
+            //Loop through all the characters in the line and check for starts, goals and invalid characters
+            for (int i = 0; i < currLine.length(); i++){
+                char currChar = currLine.charAt(i);
+                if (currChar == 'S'){
+                    startPos = new Position(i, mazeData.size()-1); // mazeData.size() - 1 is current row
+                    if(!startFound){ //If an S was found, set starting position to found coordinates and mark that a start was found
+                        startFound = true;
+                    }else{
+                        throw new MazeBuildException("File contained multiple starts");
+                    }
+                } else if(currChar == 'G'){ //If an G was found, mark that a goal was found
+                    endFound = true;
+                } else if(currChar != '*' && currChar != ' '){ //If character is invalid, throw exception
+                    throw new MazeBuildException(String.format("File contained invalid character '%c'" +
+                                                               " (should only contain characters 'S', 'G', 'space', or '*')", currChar));
                 }
-            }
-            //If an G was found, mark that a goal was found
-            if(g != -1){
-                endFound = true;
             }
         }
         if(!startFound){
@@ -73,10 +75,11 @@ public class Maze {
 
     public boolean isMovable(Position p){
         if(p.getX() >= 0 && p.getY() >= 0){ //Check if position is not outside left side or over the top of the maze
-            String relRow = mazeData.get(p.getY());
-            //Check if position is outside of the current row or below last row
-            if(p.getY() < getNumRows() && p.getX() < relRow.length()){
-                return relRow.charAt(p.getX()) != '*';
+            if (p.getY() < getNumRows()){ //Check if position is below last row
+                String relRow = mazeData.get(p.getY());
+                if(p.getX() < relRow.length()){ //Check if position is outside of the current row
+                    return relRow.charAt(p.getX()) != '*';
+                }
             }
         }
         return false;

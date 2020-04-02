@@ -13,7 +13,7 @@ public class RandomRobot {
     public RandomRobot(Maze maze){
         this.maze = maze;
         //Start the robot on the mazes start position
-        position = maze.getStart();
+        setPosition(maze.getStart());
         //Initialize the robots previous position as the start as well
         previousPosition = position;
     }
@@ -47,9 +47,9 @@ public class RandomRobot {
             randChoice = (int)((Math.random() * (movablePositions.size())));
             previousPosition = position;
             //Set new position to random choice of movable position
-            position = movablePositions.get(randChoice);
+             setPosition(movablePositions.get(randChoice));
         } else{
-            position = previousPosition;
+            setPosition(previousPosition);
         }
     }
 
@@ -58,7 +58,11 @@ public class RandomRobot {
     }
 
     private void setPosition(Position p){
-        position = p;
+        if(p != null){
+            position = p;
+        } else{
+            throw new NullPointerException();
+        }
     }
 
     public boolean hasReachedGoal(){
