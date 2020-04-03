@@ -18,13 +18,15 @@ public class RobotTest {
             //Create robot with created maze
             robot = new RandomRobot(maze);
 
+            //Print starting position
+            System.out.println(robot.getPosition().toString());
             //Loop while robot is anywhere but the goal
             while(!robot.hasReachedGoal()){
-                //Print position and move robot.
-                System.out.println(robot.toString());
+                //Move robot and print position
                 robot.move();
+                System.out.println(robot.getPosition().toString());
+
             }
-            System.out.println(robot.toString());
             System.out.println("Goal reached!");
 
         } catch (FileNotFoundException e){

@@ -68,11 +68,4 @@ public class RandomRobot {
     public boolean hasReachedGoal(){
         return maze.isGoal(position);
     }
-
-
-    @Override
-    public String toString(){
-        //Print the robots current coordinates
-        return position.toString();
-    }
 }
