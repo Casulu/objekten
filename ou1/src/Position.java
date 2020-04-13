@@ -37,7 +37,7 @@ public class Position {
     }
 
     @Override
-    /**
+    /*
      * Equals if both ints in the position are the same
      */
     public boolean equals(Object o){
@@ -48,15 +48,15 @@ public class Position {
     }
 
     @Override
-    /**
+    /*
      * Returns basic hash code
      */
     public int hashCode(){
-        return (this.x % this.y);
+        return (x + y) % 73;
     }
 
     @Override
-    /**
+    /*
      * Prints both ints separated by comma
      */
     public String toString(){

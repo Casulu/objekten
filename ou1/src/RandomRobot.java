@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * A robot that moves in a given maze in a random fashion when prompted
  */
-public class RandomRobot {
+public class RandomRobot implements Robot {
     //Internal variables
     private Position position;
     private Position previousPosition;
@@ -23,7 +23,7 @@ public class RandomRobot {
      */
     public void move(){
         //List for storing move options
-        ArrayList<Position> movablePositions = new ArrayList<Position>();
+        ArrayList<Position> movablePositions = new ArrayList<>();
         //Array for storing all positions around the position currently moving from
         Position[] compassPositions = new Position[4];
         //Store all positions around current position
@@ -43,13 +43,15 @@ public class RandomRobot {
 
         //If robot found any movable positions
         if(movablePositions.size() > 0){
-            //Randomize an index in the range of the indices of the movable options in the list
+            //Randomize an index in the range of the indices of the movable options list
             randChoice = (int)((Math.random() * (movablePositions.size())));
             previousPosition = position;
             //Set new position to random choice of movable position
              setPosition(movablePositions.get(randChoice));
         } else{
+            Position temp = position;
             setPosition(previousPosition);
+            previousPosition = temp;
         }
     }
 

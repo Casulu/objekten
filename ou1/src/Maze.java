@@ -1,6 +1,6 @@
 import java.io.IOException;
-import java.util.ArrayList;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Scanner;
 
 
@@ -10,9 +10,10 @@ import java.util.Scanner;
  * 'G' for the goal.
  */
 public class Maze {
-    private ArrayList<String> mazeData;
+    private HashMap<Position, Character> mazeData;
     private Position startPos;
     private int numColumns = 0;
+    private int numRows = 0;
 
     /***
      * Builds a maze from represented by a list of strings from the given reader using a scanner.
@@ -22,14 +23,16 @@ public class Maze {
      */
     public Maze(Reader reader)
             throws MazeBuildException, IOException{
-        //Initialize list for maze data
-        mazeData = new ArrayList<String>();
-        //Variabel declaration
+        //Initialize hash map for maze data
+        mazeData = new HashMap<>();
+        //Variable declaration
         Scanner test = new Scanner(reader);
         String currLine;
+        Position currPos = new Position(0,0);
 
         boolean startFound = false;
         boolean endFound = false;
+
 
         //Loop while reader has another line
         while(test.hasNextLine()){
@@ -39,8 +42,6 @@ public class Maze {
             }
             //Read next line in file
             currLine = test.nextLine();
-            //Add line to list
-            mazeData.add(currLine);
             //If current line is longer than current highest length, set numColumns to current length
             if(numColumns < currLine.length()){
                 numColumns = currLine.length();
@@ -50,7 +51,7 @@ public class Maze {
             for (int i = 0; i < currLine.length(); i++){
                 char currChar = currLine.charAt(i);
                 if (currChar == 'S'){
-                    startPos = new Position(i, mazeData.size()-1); // mazeData.size() - 1 is current row
+                    startPos = currPos; //If start is found set startPos to current position
                     if(!startFound){ //If an S was found, set starting position to found coordinates and mark that a start was found
                         startFound = true;
                     }else{
@@ -62,7 +63,11 @@ public class Maze {
                     throw new MazeBuildException(String.format("File contained invalid character '%c'" +
                                                                " (should only contain characters 'S', 'G', 'space', or '*')", currChar));
                 }
+                mazeData.put(currPos, currChar); //Write current character from file to current position in HashMap
+                currPos = currPos.getPosToEast(); //Move current positions along the line
             }
+            numRows++; //One row done. Increase counter
+            currPos = new Position(0, currPos.getY() + 1); //Move current position to first pos in next row
         }
         if(!startFound){
             throw new MazeBuildException("File contained no start");
@@ -74,19 +79,14 @@ public class Maze {
     }
 
     public boolean isMovable(Position p){
-        if(p.getX() >= 0 && p.getY() >= 0){ //Check if position is not outside left side or over the top of the maze
-            if (p.getY() < getNumRows()){ //Check if position is below last row
-                String relRow = mazeData.get(p.getY());
-                if(p.getX() < relRow.length()){ //Check if position is outside of the current row
-                    return relRow.charAt(p.getX()) != '*';
-                }
-            }
+        if(mazeData.containsKey(p)){ //If position is in bounds of map
+            return mazeData.get(p) != '*';
         }
         return false;
     }
 
     public boolean isGoal(Position p){
-        return mazeData.get(p.getY()).charAt(p.getX()) == 'G';
+        return mazeData.get(p) == 'G';
     }
 
     public Position getStart(){
@@ -98,6 +98,6 @@ public class Maze {
     }
 
     public int getNumRows(){
-        return mazeData.size();
+        return numRows;
     }
 }
