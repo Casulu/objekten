@@ -6,8 +6,8 @@ import java.io.IOException;
 public class RobotTest {
     public static void main(String[] args){
         //Variable declarations
-        Reader reader = null;
-        Maze maze = null;
+        Reader reader;
+        Maze maze;
         RandomRobot robot;
         try{
             //Create new reader and catch error if file wasn't found. Prints error message if error is caught
@@ -21,13 +21,15 @@ public class RobotTest {
             //Print starting position
             System.out.println(robot.getPosition().toString());
             //Loop while robot is anywhere but the goal
+            int steps = 0;
             while(!robot.hasReachedGoal()){
                 //Move robot and print position
                 robot.move();
-                System.out.println(robot.getPosition().toString());
+                steps++; //Count steps taken
+                System.out.println(robot.getPosition().toString()); //Print position
 
             }
-            System.out.println("Goal reached!");
+            System.out.println(String.format("Goal reached in %d steps!", steps));
 
         } catch (FileNotFoundException e){
             System.out.println(e.getMessage());

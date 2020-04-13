@@ -4,7 +4,7 @@ import java.util.ArrayList;
 /**
  * A robot that moves in a given maze in a random fashion when prompted
  */
-public class RandomRobot implements Robot {
+public class RandomRobot {
     //Internal variables
     private Position position;
     private Position previousPosition;
@@ -48,7 +48,7 @@ public class RandomRobot implements Robot {
             previousPosition = position;
             //Set new position to random choice of movable position
              setPosition(movablePositions.get(randChoice));
-        } else{
+        } else{ //If dead end is reached, move backwards and set dead end to previous position
             Position temp = position;
             setPosition(previousPosition);
             previousPosition = temp;
