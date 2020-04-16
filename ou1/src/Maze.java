@@ -79,14 +79,21 @@ public class Maze {
     }
 
     public boolean isMovable(Position p){
-        if(mazeData.containsKey(p)){ //If position is in bounds of map
-            return mazeData.get(p) != '*';
+        if(p.getY() > 0 && p.getY() < numRows && p.getX() < numColumns){
+            if(mazeData.containsKey(p)){
+                return mazeData.get(p) != '*';
+            }
         }
         return false;
     }
 
     public boolean isGoal(Position p){
-        return mazeData.get(p) == 'G';
+        if(p.getY() > 0 && p.getY() < numRows && p.getX() < numColumns){
+            if(mazeData.containsKey(p)){
+                return mazeData.get(p) == 'G';
+            }
+        }
+        return false;
     }
 
     public Position getStart(){
